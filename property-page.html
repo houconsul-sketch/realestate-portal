@@ -6,439 +6,162 @@
 <title>物件情報</title>
 <style>
   :root {
-    --ink: #1a1a1a;
-    --ink-sub: #555;
-    --ink-light: #888;
-    --bg: #f7f6f3;
-    --bg-card: #ffffff;
-    --accent: #1a4731;
-    --accent-light: #e8f0eb;
-    --accent-mid: #2d6a4f;
-    --gold: #b5813a;
-    --gold-light: #fdf6ec;
-    --border: #e2e0da;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --ink: #1a1a1a; --ink-sub: #555; --ink-light: #888;
+    --bg: #f7f6f3; --bg-card: #ffffff;
+    --accent: #1a4731; --accent-light: #e8f0eb; --accent-mid: #2d6a4f;
+    --gold: #b5813a; --border: #e2e0da; --radius: 12px; --radius-sm: 8px;
   }
-
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { background: var(--bg); color: var(--ink); font-family: 'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',sans-serif; font-size: 16px; line-height: 1.7; -webkit-font-smoothing: antialiased; }
 
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
-    font-size: 16px;
-    line-height: 1.7;
-    -webkit-font-smoothing: antialiased;
-  }
+  .site-header { background: var(--accent); padding: 14px 24px; }
+  .site-header .logo { color: #fff; font-size: 13px; font-weight: 600; letter-spacing: 0.06em; }
 
-  /* ── ヘッダー ── */
-  .site-header {
-    background: var(--accent);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    gap: 10px;
-  }
-  .site-header .logo {
-    color: #fff;
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.06em;
-    opacity: 0.9;
-  }
+  .container { max-width: 720px; margin: 0 auto; padding: 32px 20px 80px; }
 
-  /* ── メインコンテンツ ── */
-  .container {
-    max-width: 720px;
-    margin: 0 auto;
-    padding: 32px 20px 80px;
-  }
-
-  /* ── 物件タイトルブロック ── */
-  .prop-hero {
-    margin-bottom: 28px;
-  }
-  .prop-tag {
-    display: inline-block;
-    background: var(--accent-light);
-    color: var(--accent);
-    font-size: 12px;
-    font-weight: 600;
-    letter-spacing: 0.05em;
-    padding: 4px 12px;
-    border-radius: 20px;
-    margin-bottom: 10px;
-  }
-  .prop-title {
-    font-size: 26px;
-    font-weight: 700;
-    line-height: 1.35;
-    color: var(--ink);
-    margin-bottom: 10px;
-  }
-  .prop-meta-row {
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-wrap: wrap;
-  }
-  .prop-id {
-    font-size: 12px;
-    color: var(--ink-light);
-  }
-  .stars {
-    display: flex;
-    gap: 3px;
-  }
-  .star {
-    font-size: 18px;
-    color: var(--gold);
-  }
+  .prop-hero { margin-bottom: 28px; }
+  .prop-tag { display: inline-block; background: var(--accent-light); color: var(--accent); font-size: 12px; font-weight: 600; padding: 4px 12px; border-radius: 20px; margin-bottom: 10px; }
+  .prop-title { font-size: 26px; font-weight: 700; line-height: 1.35; margin-bottom: 10px; }
+  .prop-meta-row { display: flex; align-items: center; gap: 16px; flex-wrap: wrap; }
+  .prop-id { font-size: 12px; color: var(--ink-light); }
+  .stars { display: flex; gap: 3px; }
+  .star { font-size: 18px; color: var(--gold); }
   .star.empty { color: #ddd; }
-  .recommend-label {
-    font-size: 12px;
-    color: var(--gold);
-    font-weight: 600;
-  }
+  .recommend-label { font-size: 12px; color: var(--gold); font-weight: 600; }
 
-  /* ── セクション共通 ── */
-  .section {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 16px;
-  }
-  .section-title {
-    font-size: 11px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: var(--ink-light);
-    text-transform: uppercase;
-    margin-bottom: 18px;
-    padding-bottom: 10px;
-    border-bottom: 1px solid var(--border);
-  }
+  .section { background: var(--bg-card); border: 1px solid var(--border); border-radius: var(--radius); padding: 24px; margin-bottom: 16px; }
+  .section-title { font-size: 11px; font-weight: 700; letter-spacing: 0.1em; color: var(--ink-light); text-transform: uppercase; margin-bottom: 18px; padding-bottom: 10px; border-bottom: 1px solid var(--border); }
 
-  /* ── 基本情報グリッド ── */
-  .info-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-  }
-  @media (max-width: 480px) {
-    .info-grid { grid-template-columns: 1fr; }
-  }
-  .info-cell {
-    padding: 14px 16px;
-    background: var(--bg);
-    border-radius: 6px;
-    margin: 2px;
-  }
-  .info-cell:first-child:nth-last-child(odd),
-  .info-cell:first-child:nth-last-child(odd) ~ .info-cell:last-child {
-    grid-column: span 2;
-  }
-  .info-label {
-    font-size: 11px;
-    color: var(--ink-light);
-    font-weight: 600;
-    letter-spacing: 0.04em;
-    margin-bottom: 4px;
-  }
-  .info-value {
-    font-size: 17px;
-    font-weight: 600;
-    color: var(--ink);
-    line-height: 1.3;
-  }
-  .info-value.big {
-    font-size: 22px;
-    color: var(--accent);
-  }
+  .info-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; }
+  @media(max-width:480px){ .info-grid { grid-template-columns: 1fr; } }
+  .info-cell { padding: 14px 16px; background: var(--bg); border-radius: 6px; margin: 2px; }
+  .info-label { font-size: 11px; color: var(--ink-light); font-weight: 600; letter-spacing: 0.04em; margin-bottom: 4px; }
+  .info-value { font-size: 17px; font-weight: 600; color: var(--ink); line-height: 1.3; }
+  .info-value.big { font-size: 22px; color: var(--accent); }
 
-  /* ── 管理人コメント ── */
-  .comment-section {
-    background: var(--accent-light);
-    border: 1.5px solid var(--accent-mid);
-    border-radius: var(--radius);
-    padding: 22px 24px;
-    margin-bottom: 16px;
-  }
-  .comment-header {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 12px;
-  }
-  .comment-icon {
-    width: 32px;
-    height: 32px;
-    background: var(--accent);
-    border-radius: 50%;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
+  .comment-section { background: var(--accent-light); border: 1.5px solid var(--accent-mid); border-radius: var(--radius); padding: 22px 24px; margin-bottom: 16px; }
+  .comment-header { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+  .comment-icon { width: 32px; height: 32px; background: var(--accent); border-radius: 50%; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .comment-icon svg { width: 16px; height: 16px; fill: white; }
-  .comment-who {
-    font-size: 12px;
-    font-weight: 700;
-    color: var(--accent);
-    letter-spacing: 0.04em;
-  }
-  .comment-body {
-    font-size: 15px;
-    line-height: 1.8;
-    color: #1a3a2a;
-  }
+  .comment-who { font-size: 12px; font-weight: 700; color: var(--accent); letter-spacing: 0.04em; }
+  .comment-body { font-size: 15px; line-height: 1.8; color: #1a3a2a; }
 
-  /* ── 資料ボタン ── */
-  .pdf-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-  }
-  @media (max-width: 480px) {
-    .pdf-grid { grid-template-columns: 1fr; }
-  }
-  .pdf-btn {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 16px 18px;
-    background: var(--bg-card);
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    text-decoration: none;
-    color: var(--ink);
-    transition: border-color 0.15s, background 0.15s, transform 0.1s;
-    cursor: pointer;
-  }
-  .pdf-btn:hover {
-    border-color: var(--accent-mid);
-    background: var(--accent-light);
-    transform: translateY(-1px);
-  }
-  .pdf-btn:active { transform: translateY(0); }
-  .pdf-icon {
-    width: 36px;
-    height: 36px;
-    background: var(--accent-light);
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    flex-shrink: 0;
-  }
+  .pdf-btn { display: flex; align-items: center; gap: 12px; padding: 16px 18px; background: var(--bg-card); border: 1.5px solid var(--border); border-radius: var(--radius-sm); text-decoration: none; color: var(--ink); transition: all 0.15s; cursor: pointer; max-width: 360px; }
+  .pdf-btn:hover { border-color: var(--accent-mid); background: var(--accent-light); transform: translateY(-1px); }
+  .pdf-icon { width: 36px; height: 36px; background: var(--accent-light); border-radius: 8px; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
   .pdf-icon svg { width: 18px; height: 18px; fill: var(--accent); }
-  .pdf-info { flex: 1; min-width: 0; }
-  .pdf-name {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--ink);
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-  }
-  .pdf-sub {
-    font-size: 11px;
-    color: var(--ink-light);
-    margin-top: 2px;
-  }
-  .pdf-arrow {
-    color: var(--accent-mid);
-    font-size: 16px;
-    flex-shrink: 0;
-  }
+  .pdf-info { flex: 1; }
+  .pdf-name { font-size: 13px; font-weight: 600; }
+  .pdf-sub { font-size: 11px; color: var(--ink-light); margin-top: 2px; }
+  .pdf-arrow { color: var(--accent-mid); font-size: 16px; }
 
-  /* ── お問い合わせ footer ── */
-  .contact-footer {
-    text-align: center;
-    padding: 24px;
-    color: var(--ink-light);
-    font-size: 13px;
-    line-height: 1.8;
-  }
-
-  /* ── 非表示（URLに情報がない場合） ── */
-  .not-found {
-    text-align: center;
-    padding: 80px 20px;
-    color: var(--ink-sub);
-  }
+  .loading { text-align: center; padding: 80px 20px; color: var(--ink-light); font-size: 14px; }
+  .not-found { text-align: center; padding: 80px 20px; color: var(--ink-sub); }
   .not-found h2 { font-size: 20px; margin-bottom: 8px; color: var(--ink); }
-
-  /* ── ログ送信中のインジケーター（非表示） ── */
-  #log-status { display: none; }
+  .contact-footer { text-align: center; padding: 24px; color: var(--ink-light); font-size: 13px; line-height: 1.8; }
 </style>
 </head>
 <body>
-
-<header class="site-header">
-  <div class="logo">不動産情報ポータル</div>
-</header>
-
+<header class="site-header"><div class="logo">不動産情報ポータル</div></header>
 <div class="container" id="main-content">
+  <div class="loading" id="loading">物件情報を読み込んでいます…</div>
   <div class="not-found" id="not-found-msg" style="display:none">
     <h2>物件が見つかりませんでした</h2>
     <p>URLが正しいかご確認ください。</p>
   </div>
-
-  <!-- 物件ヒーロー -->
-  <div class="prop-hero" id="prop-hero"></div>
-
-  <!-- 基本情報 -->
-  <div class="section" id="section-info" style="display:none">
-    <div class="section-title">基本情報</div>
-    <div class="info-grid" id="info-grid"></div>
-  </div>
-
-  <!-- 管理人コメント -->
+  <div id="prop-hero" class="prop-hero" style="display:none"></div>
+  <div class="section" id="section-info" style="display:none"><div class="section-title">基本情報</div><div class="info-grid" id="info-grid"></div></div>
   <div class="comment-section" id="section-comment" style="display:none">
     <div class="comment-header">
-      <div class="comment-icon">
-        <svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg>
-      </div>
+      <div class="comment-icon"><svg viewBox="0 0 24 24"><path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/></svg></div>
       <div class="comment-who">担当者よりコメント</div>
     </div>
     <div class="comment-body" id="comment-body"></div>
   </div>
-
-  <!-- 添付資料 -->
-  <div class="section" id="section-pdfs" style="display:none">
-    <div class="section-title">添付資料</div>
-    <div id="pdf-grid"></div>
-  </div>
-
-  <div class="contact-footer">
-    ご質問・ご検討のご連絡はお気軽にどうぞ。
-  </div>
+  <div class="section" id="section-pdfs" style="display:none"><div class="section-title">添付資料</div><div id="pdf-grid"></div></div>
+  <div class="contact-footer" id="footer" style="display:none">ご質問・ご検討のご連絡はお気軽にどうぞ。</div>
 </div>
 
-<span id="log-status"></span>
-
 <script>
-// ── URLパラメータ取得 ──
 const params = new URLSearchParams(location.search);
 const propId = params.get('prop');
 const buyerName = params.get('buyer') || '（不明）';
+const GAS_URL = 'GAS_URL_PLACEHOLDER';
 
-// ── 物件データをLocalStorageから取得 ──
-function getProperties() {
-  try { return JSON.parse(localStorage.getItem('re_properties') || '[]'); } catch { return []; }
-}
-
-const properties = getProperties();
-const prop = properties.find(p => p.id === propId);
-
-if (!prop) {
+if (!propId) {
+  document.getElementById('loading').style.display = 'none';
   document.getElementById('not-found-msg').style.display = 'block';
 } else {
-  renderProperty(prop);
-  sendLog('page_open', null);
+  fetch(`${GAS_URL}?action=getProp&propId=${encodeURIComponent(propId)}`)
+    .then(r => r.json())
+    .then(prop => {
+      document.getElementById('loading').style.display = 'none';
+      if (!prop) { document.getElementById('not-found-msg').style.display = 'block'; return; }
+      renderProperty(prop);
+      sendLog('page_open', '');
+    })
+    .catch(() => {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('not-found-msg').style.display = 'block';
+    });
 }
 
 function renderProperty(p) {
-  // ── ヒーロー ──
-  const starsHtml = [1,2,3,4,5].map(i =>
-    `<span class="star${i <= (p.stars || 0) ? '' : ' empty'}">★</span>`
-  ).join('');
-
+  const starsHtml = [1,2,3,4,5].map(i=>`<span class="star${i<=(p.stars||0)?'':' empty'}">★</span>`).join('');
   document.getElementById('prop-hero').innerHTML = `
     <div class="prop-tag">物件情報</div>
-    <h1 class="prop-title">${escHtml(p.name)}</h1>
+    <h1 class="prop-title">${esc(p.name)}</h1>
     <div class="prop-meta-row">
-      <span class="prop-id">物件ID：${escHtml(p.id)}</span>
+      <span class="prop-id">物件ID：${esc(p.id)}</span>
       <div class="stars">${starsHtml}</div>
-      ${p.stars >= 4 ? '<span class="recommend-label">おすすめ物件</span>' : ''}
-    </div>
-  `;
+      ${(p.stars||0)>=4?'<span class="recommend-label">おすすめ物件</span>':''}
+    </div>`;
+  document.getElementById('prop-hero').style.display = 'block';
 
-  // ── 基本情報 ──
   const fields = p.fields || [];
   if (fields.length > 0) {
-    const grid = document.getElementById('info-grid');
-    // 価格フィールドを先頭に出して大きく表示
-    const priceField = fields.find(f => f.label.includes('価格') || f.label.includes('金額'));
-    const otherFields = fields.filter(f => f !== priceField);
-    const ordered = priceField ? [priceField, ...otherFields] : fields;
-
-    grid.innerHTML = ordered.map((f, i) => `
+    const priceField = fields.find(f=>f.label.includes('価格'));
+    const others = fields.filter(f=>f!==priceField);
+    const ordered = priceField ? [priceField,...others] : fields;
+    document.getElementById('info-grid').innerHTML = ordered.map((f,i)=>`
       <div class="info-cell">
-        <div class="info-label">${escHtml(f.label)}</div>
-        <div class="info-value${i === 0 && priceField ? ' big' : ''}">${escHtml(f.value)}</div>
-      </div>
-    `).join('');
+        <div class="info-label">${esc(f.label)}</div>
+        <div class="info-value${i===0&&priceField?' big':''}">${esc(f.value)||'─'}</div>
+      </div>`).join('');
     document.getElementById('section-info').style.display = 'block';
   }
 
-  // ── コメント ──
   if (p.comment && p.comment.trim()) {
     document.getElementById('comment-body').textContent = p.comment;
     document.getElementById('section-comment').style.display = 'block';
   }
 
-  // ── PDF資料（Google Driveフォルダ方式）──
-  const folderUrl = p.folderUrl || "";
-  if (folderUrl) {
-    const grid = document.getElementById("pdf-grid");
-    grid.innerHTML = `
-      <div style="margin-bottom:12px; font-size:14px; color:var(--ink-sub); line-height:1.7">
-        資料一式をGoogle Driveフォルダにまとめています。<br>
-        下のボタンから開いて、必要なファイルを個別に閲覧・ダウンロードできます。
+  if (p.folderUrl) {
+    document.getElementById('pdf-grid').innerHTML = `
+      <div style="margin-bottom:12px;font-size:14px;color:var(--ink-sub);line-height:1.7">
+        資料一式をGoogle Driveフォルダにまとめています。<br>下のボタンから開いて、個別閲覧・一括ダウンロードができます。
       </div>
-      <a class="pdf-btn" href="${escHtml(folderUrl)}" target="_blank" rel="noopener"
-         onclick="sendLog('pdf_click', 'フォルダを開く')"
-         style="max-width:360px">
-        <div class="pdf-icon">
-          <svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg>
-        </div>
-        <div class="pdf-info">
-          <div class="pdf-name">📂 資料フォルダを開く</div>
-          <div class="pdf-sub">閲覧・一括ダウンロード可能</div>
-        </div>
+      <a class="pdf-btn" href="${esc(p.folderUrl)}" target="_blank" rel="noopener" onclick="sendLog('pdf_click','フォルダを開く')">
+        <div class="pdf-icon"><svg viewBox="0 0 24 24"><path d="M10 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V8c0-1.1-.9-2-2-2h-8l-2-2z"/></svg></div>
+        <div class="pdf-info"><div class="pdf-name">📂 資料フォルダを開く</div><div class="pdf-sub">閲覧・一括ダウンロード可能</div></div>
         <div class="pdf-arrow">→</div>
       </a>
-      <div style="margin-top:12px; font-size:12px; color:var(--ink-light)">
-        ※ フォルダを開いた後、右上の「すべてダウンロード」で一括取得できます
-      </div>
-    `;
-    document.getElementById("section-pdfs").style.display = "block";
+      <div style="margin-top:12px;font-size:12px;color:var(--ink-light)">※ フォルダを開いた後、右上の「すべてダウンロード」で一括取得できます</div>`;
+    document.getElementById('section-pdfs').style.display = 'block';
   }
+  document.getElementById('footer').style.display = 'block';
 }
 
-// ── GASへログ送信 ──
 function sendLog(action, detail) {
-  const GAS_URL = localStorage.getItem('re_gas_url') || '';
-  if (!GAS_URL) return;
-
-  const payload = {
-    timestamp: new Date().toISOString(),
-    buyer: buyerName,
-    propId: propId,
-    propName: prop ? prop.name : '',
-    action: action,
-    detail: detail || ''
-  };
-
+  if (!GAS_URL || GAS_URL === 'GAS_URL_PLACEHOLDER') return;
   fetch(GAS_URL, {
-    method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(payload)
-  }).catch(() => {});
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'application/json'},
+    body: JSON.stringify({ action:'log', timestamp:new Date().toISOString(), buyer:buyerName, propId, propName:'', action, detail })
+  }).catch(()=>{});
 }
 
-// ── ユーティリティ ──
-function escHtml(s) {
-  return String(s || '').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(s) {
-  return String(s || '').replace(/'/g, "\\'");
-}
+function esc(s){ return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
 </script>
 </body>
 </html>

@@ -6,471 +6,218 @@
 <title>管理ツール ── 不動産情報ポータル</title>
 <style>
   :root {
-    --ink: #1a1a1a;
-    --ink-sub: #555;
-    --ink-light: #888;
-    --bg: #f2f1ee;
-    --bg-card: #ffffff;
-    --accent: #1a4731;
-    --accent-light: #e8f0eb;
-    --accent-mid: #2d6a4f;
-    --gold: #b5813a;
-    --gold-light: #fdf6ec;
-    --danger: #c0392b;
-    --danger-light: #fdf0ef;
-    --border: #e0deda;
-    --radius: 12px;
-    --radius-sm: 8px;
+    --ink:#1a1a1a; --ink-sub:#555; --ink-light:#888;
+    --bg:#f2f1ee; --bg-card:#ffffff;
+    --accent:#1a4731; --accent-light:#e8f0eb; --accent-mid:#2d6a4f;
+    --gold:#b5813a; --danger:#c0392b; --danger-light:#fdf0ef;
+    --border:#e0deda; --radius:12px; --radius-sm:8px;
   }
-  * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--ink);
-    font-family: 'Hiragino Kaku Gothic ProN', 'Hiragino Sans', 'Yu Gothic', sans-serif;
-    font-size: 14px;
-    line-height: 1.65;
-    -webkit-font-smoothing: antialiased;
-  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--ink);font-family:'Hiragino Kaku Gothic ProN','Hiragino Sans','Yu Gothic',sans-serif;font-size:14px;line-height:1.65;-webkit-font-smoothing:antialiased;}
 
-  /* ── レイアウト ── */
-  .layout { display: grid; grid-template-columns: 220px 1fr; min-height: 100vh; }
-  .sidebar {
-    background: var(--accent);
-    padding: 0;
-    position: sticky;
-    top: 0;
-    height: 100vh;
-    overflow-y: auto;
-  }
-  .sidebar-logo {
-    padding: 20px 20px 16px;
-    font-size: 13px;
-    font-weight: 700;
-    color: rgba(255,255,255,0.9);
-    border-bottom: 1px solid rgba(255,255,255,0.1);
-    letter-spacing: 0.05em;
-  }
-  .nav-item {
-    display: block;
-    padding: 13px 20px;
-    color: rgba(255,255,255,0.7);
-    font-size: 13px;
-    cursor: pointer;
-    border-left: 3px solid transparent;
-    transition: all 0.15s;
-    user-select: none;
-  }
-  .nav-item:hover { background: rgba(255,255,255,0.07); color: #fff; }
-  .nav-item.active { background: rgba(255,255,255,0.12); color: #fff; border-left-color: #fff; }
-  .nav-section {
-    padding: 16px 20px 6px;
-    font-size: 10px;
-    font-weight: 700;
-    letter-spacing: 0.1em;
-    color: rgba(255,255,255,0.35);
-    text-transform: uppercase;
-  }
+  .layout{display:grid;grid-template-columns:220px 1fr;min-height:100vh;}
+  .sidebar{background:var(--accent);position:sticky;top:0;height:100vh;overflow-y:auto;}
+  .sidebar-logo{padding:20px 20px 16px;font-size:13px;font-weight:700;color:rgba(255,255,255,.9);border-bottom:1px solid rgba(255,255,255,.1);letter-spacing:.05em;}
+  .nav-item{display:block;padding:13px 20px;color:rgba(255,255,255,.7);font-size:13px;cursor:pointer;border-left:3px solid transparent;transition:all .15s;user-select:none;}
+  .nav-item:hover{background:rgba(255,255,255,.07);color:#fff;}
+  .nav-item.active{background:rgba(255,255,255,.12);color:#fff;border-left-color:#fff;}
+  .nav-section{padding:16px 20px 6px;font-size:10px;font-weight:700;letter-spacing:.1em;color:rgba(255,255,255,.35);text-transform:uppercase;}
 
-  .main { padding: 32px 36px; max-width: 900px; }
-  .page { display: none; }
-  .page.active { display: block; }
+  .main{padding:32px 36px;max-width:900px;}
+  .page{display:none;} .page.active{display:block;}
+  .page-title{font-size:22px;font-weight:700;margin-bottom:4px;}
+  .page-sub{font-size:13px;color:var(--ink-light);margin-bottom:28px;}
+  .section-title{font-size:11px;font-weight:700;letter-spacing:.1em;color:var(--ink-light);text-transform:uppercase;margin-bottom:14px;padding-bottom:8px;border-bottom:1px solid var(--border);}
+  .card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:24px;margin-bottom:20px;}
 
-  /* ── 共通タイポ ── */
-  .page-title { font-size: 22px; font-weight: 700; margin-bottom: 4px; }
-  .page-sub { font-size: 13px; color: var(--ink-light); margin-bottom: 28px; }
-  .section-title {
-    font-size: 11px; font-weight: 700; letter-spacing: 0.1em;
-    color: var(--ink-light); text-transform: uppercase;
-    margin-bottom: 14px; padding-bottom: 8px;
-    border-bottom: 1px solid var(--border);
-  }
+  .form-row{margin-bottom:16px;}
+  .form-row label{display:block;font-size:12px;font-weight:600;color:var(--ink-sub);margin-bottom:5px;}
+  .form-row input[type=text],.form-row textarea,.form-row select{width:100%;padding:10px 12px;border:1.5px solid var(--border);border-radius:var(--radius-sm);font-size:14px;font-family:inherit;background:#fff;color:var(--ink);transition:border-color .15s;outline:none;}
+  .form-row input:focus,.form-row textarea:focus{border-color:var(--accent-mid);}
+  .form-row textarea{resize:vertical;min-height:80px;}
 
-  /* ── カード ── */
-  .card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 24px;
-    margin-bottom: 20px;
-  }
+  .star-picker{display:flex;gap:6px;margin-top:4px;}
+  .star-picker span{font-size:26px;cursor:pointer;color:#ddd;transition:color .1s;user-select:none;line-height:1;}
+  .star-picker span.on{color:var(--gold);}
 
-  /* ── フォーム ── */
-  .form-row { margin-bottom: 16px; }
-  .form-row label {
-    display: block; font-size: 12px; font-weight: 600;
-    color: var(--ink-sub); margin-bottom: 5px;
-  }
-  .form-row input[type=text],
-  .form-row textarea,
-  .form-row select {
-    width: 100%; padding: 10px 12px;
-    border: 1.5px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 14px; font-family: inherit;
-    background: #fff; color: var(--ink);
-    transition: border-color 0.15s;
-    outline: none;
-  }
-  .form-row input:focus, .form-row textarea:focus, .form-row select:focus {
-    border-color: var(--accent-mid);
-  }
-  .form-row textarea { resize: vertical; min-height: 80px; }
-  .form-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .field-row{display:grid;grid-template-columns:1fr 1fr 36px;gap:8px;margin-bottom:8px;align-items:center;}
+  .btn-remove{width:32px;height:32px;background:var(--danger-light);color:var(--danger);border:1px solid #f5c6c2;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+  .btn-remove:hover{background:#fde8e6;}
 
-  /* ── 星評価 ── */
-  .star-picker { display: flex; gap: 6px; margin-top: 4px; }
-  .star-picker span {
-    font-size: 26px; cursor: pointer; color: #ddd;
-    transition: color 0.1s; user-select: none;
-    line-height: 1;
-  }
-  .star-picker span.on { color: var(--gold); }
+  .btn{padding:10px 20px;border-radius:var(--radius-sm);font-size:13px;font-weight:600;font-family:inherit;cursor:pointer;border:none;transition:all .15s;}
+  .btn-primary{background:var(--accent);color:#fff;}
+  .btn-primary:hover{background:var(--accent-mid);}
+  .btn-secondary{background:#fff;color:var(--ink);border:1.5px solid var(--border);}
+  .btn-secondary:hover{border-color:#bbb;}
+  .btn-sm{padding:7px 14px;font-size:12px;}
+  .btn-add{background:var(--accent-light);color:var(--accent);border:1.5px dashed var(--accent-mid);width:100%;margin-top:4px;padding:8px;border-radius:var(--radius-sm);font-size:12px;font-weight:600;font-family:inherit;cursor:pointer;}
+  .btn-add:hover{background:#d5e6da;}
 
-  /* ── 動的フィールド ── */
-  .field-row {
-    display: grid; grid-template-columns: 1fr 1fr 36px;
-    gap: 8px; margin-bottom: 8px; align-items: center;
-  }
-  .field-row input { margin: 0; }
-  .btn-remove {
-    width: 32px; height: 32px;
-    background: var(--danger-light); color: var(--danger);
-    border: 1px solid #f5c6c2; border-radius: 6px;
-    cursor: pointer; font-size: 16px; line-height: 1;
-    display: flex; align-items: center; justify-content: center;
-    transition: background 0.1s;
-  }
-  .btn-remove:hover { background: #fde8e6; }
+  .prop-cards{display:flex;flex-direction:column;gap:12px;}
+  .prop-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:18px 20px;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:start;}
+  .prop-card-name{font-size:15px;font-weight:700;margin-bottom:4px;}
+  .prop-card-meta{font-size:12px;color:var(--ink-light);}
+  .prop-card-stars{color:var(--gold);font-size:14px;}
+  .prop-card-actions{display:flex;gap:8px;flex-wrap:wrap;justify-content:flex-end;}
 
-  /* ── PDF行 ── */
-  .pdf-row {
-    display: grid; grid-template-columns: 1fr 2fr 36px;
-    gap: 8px; margin-bottom: 8px; align-items: center;
-  }
+  .url-panel{background:var(--accent-light);border:1.5px solid var(--accent-mid);border-radius:var(--radius);padding:20px;margin-top:16px;}
+  .url-panel-title{font-size:13px;font-weight:700;color:var(--accent);margin-bottom:12px;}
+  .buyer-chips{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:14px;}
+  .buyer-chip{padding:6px 14px;background:#fff;border:1.5px solid var(--border);border-radius:20px;font-size:12px;font-weight:600;cursor:pointer;color:var(--ink);}
+  .buyer-chip.selected{background:var(--accent);color:#fff;border-color:var(--accent);}
+  .url-output{display:flex;gap:8px;align-items:center;}
+  .url-field{flex:1;padding:10px 12px;background:#fff;border:1px solid var(--border);border-radius:var(--radius-sm);font-size:12px;font-family:monospace;color:var(--ink-sub);overflow:hidden;white-space:nowrap;text-overflow:ellipsis;}
+  .copy-btn{padding:10px 16px;background:var(--accent);color:#fff;border:none;border-radius:var(--radius-sm);font-size:12px;font-weight:600;cursor:pointer;white-space:nowrap;}
+  .copy-btn:hover{background:var(--accent-mid);}
+  .copy-btn.copied{background:#27ae60;}
 
-  /* ── ボタン ── */
-  .btn {
-    padding: 10px 20px; border-radius: var(--radius-sm);
-    font-size: 13px; font-weight: 600; font-family: inherit;
-    cursor: pointer; border: none; transition: all 0.15s;
-  }
-  .btn-primary { background: var(--accent); color: #fff; }
-  .btn-primary:hover { background: var(--accent-mid); }
-  .btn-secondary {
-    background: #fff; color: var(--ink);
-    border: 1.5px solid var(--border);
-  }
-  .btn-secondary:hover { border-color: #bbb; }
-  .btn-sm { padding: 7px 14px; font-size: 12px; }
-  .btn-add {
-    background: var(--accent-light); color: var(--accent);
-    border: 1.5px dashed var(--accent-mid);
-    width: 100%; margin-top: 4px;
-    padding: 8px; border-radius: var(--radius-sm);
-    font-size: 12px; font-weight: 600; font-family: inherit;
-    cursor: pointer; transition: background 0.1s;
-  }
-  .btn-add:hover { background: #d5e6da; }
+  .log-table{width:100%;border-collapse:collapse;font-size:12px;}
+  .log-table th{text-align:left;padding:8px 12px;background:var(--bg);color:var(--ink-light);font-weight:600;font-size:11px;border-bottom:1px solid var(--border);}
+  .log-table td{padding:9px 12px;border-bottom:1px solid var(--border);}
+  .log-table tr:last-child td{border-bottom:none;}
+  .log-wrap{overflow-x:auto;border:1px solid var(--border);border-radius:var(--radius);}
+  .badge{display:inline-block;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;}
+  .badge-open{background:var(--accent-light);color:var(--accent);}
+  .badge-pdf{background:#fdf6ec;color:var(--gold);}
 
-  /* ── 物件カードリスト ── */
-  .prop-cards { display: flex; flex-direction: column; gap: 12px; }
-  .prop-card {
-    background: var(--bg-card);
-    border: 1px solid var(--border);
-    border-radius: var(--radius);
-    padding: 18px 20px;
-    display: grid;
-    grid-template-columns: 1fr auto;
-    gap: 12px;
-    align-items: start;
-  }
-  .prop-card-name { font-size: 15px; font-weight: 700; margin-bottom: 4px; }
-  .prop-card-meta { font-size: 12px; color: var(--ink-light); }
-  .prop-card-stars { color: var(--gold); font-size: 14px; }
-  .prop-card-actions { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+  .setting-row{display:flex;align-items:center;gap:12px;margin-bottom:14px;}
+  .setting-row label{font-size:12px;font-weight:600;color:var(--ink-sub);min-width:140px;}
+  .setting-row input{flex:1;}
 
-  /* ── URL発行パネル ── */
-  .url-panel {
-    background: var(--accent-light);
-    border: 1.5px solid var(--accent-mid);
-    border-radius: var(--radius);
-    padding: 20px;
-    margin-top: 16px;
-  }
-  .url-panel-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 12px; }
-  .buyer-chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 14px; }
-  .buyer-chip {
-    padding: 6px 14px;
-    background: #fff;
-    border: 1.5px solid var(--border);
-    border-radius: 20px;
-    font-size: 12px; font-weight: 600;
-    cursor: pointer; transition: all 0.12s;
-    color: var(--ink);
-  }
-  .buyer-chip.selected {
-    background: var(--accent);
-    color: #fff;
-    border-color: var(--accent);
-  }
-  .url-output {
-    display: flex; gap: 8px; align-items: center;
-  }
-  .url-field {
-    flex: 1; padding: 10px 12px;
-    background: #fff; border: 1px solid var(--border);
-    border-radius: var(--radius-sm);
-    font-size: 12px; font-family: monospace;
-    color: var(--ink-sub); overflow: hidden; white-space: nowrap;
-    text-overflow: ellipsis;
-  }
-  .copy-btn {
-    padding: 10px 16px;
-    background: var(--accent); color: #fff;
-    border: none; border-radius: var(--radius-sm);
-    font-size: 12px; font-weight: 600; cursor: pointer;
-    white-space: nowrap; transition: background 0.15s;
-  }
-  .copy-btn:hover { background: var(--accent-mid); }
-  .copy-btn.copied { background: #27ae60; }
-
-  /* ── ログテーブル ── */
-  .log-table { width: 100%; border-collapse: collapse; font-size: 12px; }
-  .log-table th {
-    text-align: left; padding: 8px 12px;
-    background: var(--bg); color: var(--ink-light);
-    font-weight: 600; font-size: 11px;
-    border-bottom: 1px solid var(--border);
-    position: sticky; top: 0;
-  }
-  .log-table td {
-    padding: 9px 12px;
-    border-bottom: 1px solid var(--border);
-    color: var(--ink);
-  }
-  .log-table tr:last-child td { border-bottom: none; }
-  .log-table tr:hover td { background: var(--bg); }
-  .log-wrap { overflow-x: auto; border: 1px solid var(--border); border-radius: var(--radius); }
-  .badge {
-    display: inline-block; padding: 2px 8px; border-radius: 20px;
-    font-size: 10px; font-weight: 600;
-  }
-  .badge-open { background: var(--accent-light); color: var(--accent); }
-  .badge-pdf { background: var(--gold-light); color: var(--gold); }
-
-  /* ── 設定 ── */
-  .setting-row {
-    display: flex; align-items: center; gap: 12px; margin-bottom: 14px;
-  }
-  .setting-row label { font-size: 12px; font-weight: 600; color: var(--ink-sub); min-width: 120px; }
-  .setting-row input { flex: 1; }
-
-  /* ── トースト ── */
-  #toast {
-    position: fixed; bottom: 28px; left: 50%; transform: translateX(-50%) translateY(20px);
-    background: #1a1a1a; color: #fff;
-    padding: 10px 22px; border-radius: 20px;
-    font-size: 13px; font-weight: 600;
-    opacity: 0; transition: all 0.25s; pointer-events: none;
-    z-index: 9999;
-  }
-  #toast.show { opacity: 1; transform: translateX(-50%) translateY(0); }
-
-  /* ── 空状態 ── */
-  .empty-state {
-    text-align: center; padding: 48px 24px;
-    color: var(--ink-light);
-  }
-  .empty-state p { margin-top: 8px; font-size: 13px; }
-
-  /* ── 進捗バッジ ── */
-  .dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 5px; vertical-align: middle; }
-  .dot-g { background: #27ae60; }
-  .dot-o { background: var(--gold); }
-  .dot-gray { background: #bbb; }
+  #toast{position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);background:#1a1a1a;color:#fff;padding:10px 22px;border-radius:20px;font-size:13px;font-weight:600;opacity:0;transition:all .25s;pointer-events:none;z-index:9999;}
+  #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+  .empty-state{text-align:center;padding:48px 24px;color:var(--ink-light);}
+  .dot{display:inline-block;width:8px;height:8px;border-radius:50%;margin-right:5px;vertical-align:middle;}
+  .dot-g{background:#27ae60;} .dot-o{background:var(--gold);} .dot-gray{background:#bbb;}
+  .spinner{display:inline-block;width:16px;height:16px;border:2px solid var(--border);border-top-color:var(--accent);border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:6px;}
+  @keyframes spin{to{transform:rotate(360deg);}}
 </style>
 </head>
 <body>
-
 <div class="layout">
-  <!-- サイドバー -->
   <nav class="sidebar">
     <div class="sidebar-logo">🏢 管理ツール</div>
     <div class="nav-section">物件管理</div>
-    <div class="nav-item active" onclick="showPage('list')">📋 物件一覧</div>
-    <div class="nav-item" onclick="showPage('register')">＋ 物件を登録</div>
+    <div class="nav-item active" onclick="showPage('list',this)">📋 物件一覧</div>
+    <div class="nav-item" onclick="showPage('register',this)">＋ 物件を登録</div>
     <div class="nav-section">進捗・ログ</div>
-    <div class="nav-item" onclick="showPage('logs')">📊 閲覧ログ</div>
+    <div class="nav-item" onclick="showPage('logs',this)">📊 閲覧ログ</div>
     <div class="nav-section">設定</div>
-    <div class="nav-item" onclick="showPage('buyers')">👥 業者管理</div>
-    <div class="nav-item" onclick="showPage('settings')">⚙️ 設定</div>
+    <div class="nav-item" onclick="showPage('buyers',this)">👥 業者管理</div>
+    <div class="nav-item" onclick="showPage('settings',this)">⚙️ 設定</div>
   </nav>
-
-  <!-- メインエリア -->
   <main class="main">
 
-    <!-- ── 物件一覧 ── -->
+    <!-- 物件一覧 -->
     <div class="page active" id="page-list">
       <div class="page-title">物件一覧</div>
       <div class="page-sub">登録済み物件の管理・URL発行</div>
       <div id="prop-list-area"></div>
     </div>
 
-    <!-- ── 物件登録 ── -->
+    <!-- 物件登録 -->
     <div class="page" id="page-register">
       <div class="page-title" id="register-title">物件を登録</div>
       <div class="page-sub">新しい物件情報を入力してください</div>
-
       <div class="card">
         <div class="section-title">基本設定</div>
-        <div class="form-row">
-          <label>物件名 *</label>
-          <input type="text" id="f-name" placeholder="例：大阪市北区 収益ビル">
-        </div>
-        <div class="form-row">
-          <label>おすすめ度</label>
+        <div class="form-row"><label>物件名 *</label><input type="text" id="f-name" placeholder="例：大阪市北区 収益ビル"></div>
+        <div class="form-row"><label>おすすめ度</label>
           <div class="star-picker" id="star-picker">
-            <span onclick="setStar(1)">★</span>
-            <span onclick="setStar(2)">★</span>
-            <span onclick="setStar(3)">★</span>
-            <span onclick="setStar(4)">★</span>
-            <span onclick="setStar(5)">★</span>
+            <span onclick="setStar(1)">★</span><span onclick="setStar(2)">★</span><span onclick="setStar(3)">★</span><span onclick="setStar(4)">★</span><span onclick="setStar(5)">★</span>
           </div>
         </div>
       </div>
-
       <div class="card">
         <div class="section-title">基本情報（自由に追加）</div>
-        <div style="font-size:11px; color:var(--ink-light); margin-bottom:12px">
-          「項目名」と「値」のペアで入力。行は自由に追加できます。
-        </div>
-        <div style="display:grid; grid-template-columns:1fr 1fr 36px; gap:8px; margin-bottom:6px;">
-          <div style="font-size:11px; font-weight:600; color:var(--ink-light); padding:0 2px;">項目名</div>
-          <div style="font-size:11px; font-weight:600; color:var(--ink-light); padding:0 2px;">値</div>
+        <div style="display:grid;grid-template-columns:1fr 1fr 36px;gap:8px;margin-bottom:6px;">
+          <div style="font-size:11px;font-weight:600;color:var(--ink-light);padding:0 2px;">項目名</div>
+          <div style="font-size:11px;font-weight:600;color:var(--ink-light);padding:0 2px;">値</div>
           <div></div>
         </div>
         <div id="fields-container"></div>
         <button class="btn-add" onclick="addField()">＋ 項目を追加</button>
       </div>
-
       <div class="card">
         <div class="section-title">添付資料（Google Drive フォルダ）</div>
-        <div style="font-size:11px; color:var(--ink-light); margin-bottom:12px; line-height:1.7">
-          物件資料をまとめたGoogle DriveフォルダのURLを1つ貼るだけでOKです。<br>
-          業者さんはフォルダを開いて個別閲覧・一括ダウンロードができます。
+        <div style="font-size:11px;color:var(--ink-light);margin-bottom:12px;line-height:1.7">
+          物件資料をまとめたGoogle DriveフォルダのURLを1つ貼るだけでOKです。<br>業者さんはフォルダを開いて個別閲覧・一括ダウンロードができます。
         </div>
         <div class="form-row" style="margin:0">
           <label>Google Drive フォルダURL</label>
           <input type="text" id="f-folder-url" placeholder="https://drive.google.com/drive/folders/…">
         </div>
-        <div style="margin-top:8px; font-size:11px; color:var(--ink-light); line-height:1.7">
+        <div style="margin-top:8px;font-size:11px;color:var(--ink-light);line-height:1.7">
           📌 取得方法：Driveでフォルダを右クリック →「リンクをコピー」→「リンクを知っている全員」に共有設定
         </div>
       </div>
-
       <div class="card">
         <div class="section-title">担当者コメント</div>
         <div class="form-row" style="margin:0">
           <textarea id="f-comment" placeholder="業者さんへのおすすめポイント・注意点などを自由に入力" rows="4"></textarea>
         </div>
       </div>
-
-      <div style="display:flex; gap:10px; margin-top:4px;">
-        <button class="btn btn-primary" onclick="saveProperty()">💾 保存する</button>
+      <div style="display:flex;gap:10px;margin-top:4px;">
+        <button class="btn btn-primary" onclick="saveProperty()" id="save-btn">💾 保存する</button>
         <button class="btn btn-secondary" onclick="cancelEdit()">キャンセル</button>
-        <button class="btn btn-secondary" id="delete-btn" style="display:none; margin-left:auto; color:var(--danger); border-color:#f5c6c2;" onclick="deleteProperty()">🗑 削除</button>
+        <button class="btn btn-secondary" id="delete-btn" style="display:none;margin-left:auto;color:var(--danger);border-color:#f5c6c2;" onclick="deleteProperty()">🗑 削除</button>
       </div>
     </div>
 
-    <!-- ── 閲覧ログ ── -->
+    <!-- 閲覧ログ -->
     <div class="page" id="page-logs">
       <div class="page-title">閲覧ログ</div>
-      <div class="page-sub">業者の閲覧・PDF開封の履歴</div>
+      <div class="page-sub">業者の閲覧・フォルダ開封の履歴</div>
       <div class="card" style="padding:0">
-        <div style="padding:16px 20px; display:flex; gap:10px; align-items:center; border-bottom:1px solid var(--border);">
-          <select id="log-filter-prop" style="flex:1" onchange="renderLogs()">
-            <option value="">すべての物件</option>
-          </select>
-          <select id="log-filter-buyer" style="flex:1" onchange="renderLogs()">
-            <option value="">すべての業者</option>
-          </select>
-          <button class="btn btn-sm btn-secondary" onclick="clearLogs()">ログを削除</button>
+        <div style="padding:16px 20px;display:flex;gap:10px;align-items:center;border-bottom:1px solid var(--border);">
+          <select id="log-filter-buyer" style="flex:1" onchange="renderLogs()"><option value="">すべての業者</option></select>
+          <button class="btn btn-sm btn-secondary" onclick="loadLogs()">🔄 更新</button>
         </div>
-        <div class="log-wrap" style="border:none; border-radius:0">
+        <div class="log-wrap" style="border:none;border-radius:0">
           <table class="log-table">
-            <thead>
-              <tr>
-                <th>日時</th>
-                <th>業者名</th>
-                <th>物件</th>
-                <th>アクション</th>
-                <th>詳細</th>
-              </tr>
-            </thead>
+            <thead><tr><th>日時</th><th>業者名</th><th>物件名</th><th>アクション</th></tr></thead>
             <tbody id="log-tbody"></tbody>
           </table>
         </div>
       </div>
     </div>
 
-    <!-- ── 業者管理 ── -->
+    <!-- 業者管理 -->
     <div class="page" id="page-buyers">
       <div class="page-title">業者管理</div>
       <div class="page-sub">共有する業者を登録しておくと、URL発行時に選べます</div>
       <div class="card">
-        <div class="form-row" style="display:flex; gap:8px; margin:0">
+        <div class="form-row" style="display:flex;gap:8px;margin:0">
           <input type="text" id="buyer-input" placeholder="業者名を入力（例：山本建設）" style="flex:1">
           <button class="btn btn-primary btn-sm" onclick="addBuyer()">追加</button>
         </div>
       </div>
-      <div class="card">
-        <div class="section-title">登録済み業者</div>
-        <div id="buyer-list"></div>
-      </div>
+      <div class="card"><div class="section-title">登録済み業者</div><div id="buyer-list"></div></div>
     </div>
 
-    <!-- ── 設定 ── -->
+    <!-- 設定 -->
     <div class="page" id="page-settings">
       <div class="page-title">設定</div>
-      <div class="page-sub">GAS連携URLなどを設定します</div>
+      <div class="page-sub">GAS連携URLを設定します</div>
       <div class="card">
         <div class="section-title">GAS連携設定</div>
-        <div class="setting-row">
-          <label>GAS ウェブアプリURL</label>
-          <input type="text" id="s-gas-url" placeholder="https://script.google.com/macros/s/…/exec">
-        </div>
-        <div class="setting-row">
-          <label>物件ページURL</label>
-          <input type="text" id="s-page-url" placeholder="https://example.com/property-page.html">
-        </div>
-        <div style="font-size:12px; color:var(--ink-light); margin-bottom:16px; line-height:1.7">
-          ・GAS URLはスプレッドシートのApps Scriptからデプロイして取得します（手順書参照）<br>
-          ・物件ページURLはproperty-page.htmlを設置した場所のURLを入力してください
+        <div class="setting-row"><label>GAS ウェブアプリURL *</label><input type="text" id="s-gas-url" placeholder="https://script.google.com/macros/s/…/exec"></div>
+        <div class="setting-row"><label>物件ページURL *</label><input type="text" id="s-page-url" placeholder="https://houconsul-sketch.github.io/realestate-portal/property-page.html"></div>
+        <div style="font-size:12px;color:var(--ink-light);margin-bottom:16px;line-height:1.7">
+          ⚠️ 両方の設定が必要です。GAS URLを設定すると物件データがスプレッドシートに保存され、業者ページからも読み込めるようになります。
         </div>
         <button class="btn btn-primary btn-sm" onclick="saveSettings()">保存</button>
-      </div>
-      <div class="card">
-        <div class="section-title">データ管理</div>
-        <div style="font-size:12px; color:var(--ink-light); margin-bottom:14px">
-          すべてのデータはこのブラウザのLocalStorageに保存されています。
-        </div>
-        <button class="btn btn-secondary btn-sm" onclick="exportData()">📤 データをエクスポート（JSON）</button>
-        &nbsp;
-        <button class="btn btn-secondary btn-sm" onclick="document.getElementById('import-file').click()">📥 データをインポート</button>
-        <input type="file" id="import-file" accept=".json" style="display:none" onchange="importData(this)">
       </div>
     </div>
 
   </main>
 </div>
 
-<div id="toast"></div>
-
-<!-- URL発行モーダル（インライン表示） -->
-<div id="url-modal" style="display:none; position:fixed; inset:0; background:rgba(0,0,0,0.45); z-index:1000; display:none; align-items:center; justify-content:center;">
-  <div style="background:#fff; border-radius:16px; padding:28px; width:520px; max-width:90vw;">
-    <div style="font-size:17px; font-weight:700; margin-bottom:4px;" id="modal-prop-name"></div>
-    <div style="font-size:12px; color:var(--ink-light); margin-bottom:20px;">業者を選んでURLをコピーしてください</div>
+<!-- URL発行モーダル -->
+<div id="url-modal" style="display:none;position:fixed;inset:0;background:rgba(0,0,0,.45);z-index:1000;align-items:center;justify-content:center;">
+  <div style="background:#fff;border-radius:16px;padding:28px;width:520px;max-width:90vw;">
+    <div style="font-size:17px;font-weight:700;margin-bottom:4px;" id="modal-prop-name"></div>
+    <div style="font-size:12px;color:var(--ink-light);margin-bottom:20px;">業者を選んでURLをコピーしてください</div>
     <div class="url-panel">
       <div class="url-panel-title">業者を選択</div>
       <div class="buyer-chips" id="modal-buyer-chips"></div>
@@ -479,392 +226,255 @@
         <button class="copy-btn" id="modal-copy-btn" onclick="copyModalUrl()">コピー</button>
       </div>
     </div>
-    <div style="margin-top:16px; text-align:right">
-      <button class="btn btn-secondary btn-sm" onclick="closeModal()">閉じる</button>
-    </div>
+    <div style="margin-top:16px;text-align:right"><button class="btn btn-secondary btn-sm" onclick="closeModal()">閉じる</button></div>
   </div>
 </div>
 
-<script>
-// ── データストア ──
-function getData(key, def) { try { return JSON.parse(localStorage.getItem(key)) || def; } catch { return def; } }
-function setData(key, val) { localStorage.setItem(key, JSON.stringify(val)); }
+<div id="toast"></div>
 
-let editingId = null;
-let currentStars = 0;
-let modalPropId = null;
-let selectedBuyer = null;
+<script>
+// ── ストレージ ──
+function gasUrl(){ return localStorage.getItem('re_gas_url')||''; }
+function pageUrl(){ return localStorage.getItem('re_page_url')||''; }
+function getBuyers(){ try{return JSON.parse(localStorage.getItem('re_buyers')||'[]');}catch{return[];} }
+function getLogs(){ try{return JSON.parse(localStorage.getItem('re_logs_cache')||'[]');}catch{return[];} }
+
+let editingId=null, currentStars=0, modalPropId=null;
+let propsCache=[];
 
 // ── ページ切替 ──
-function showPage(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  event.currentTarget.classList.add('active');
-  if (name === 'list') renderList();
-  if (name === 'logs') renderLogs();
-  if (name === 'buyers') renderBuyers();
-  if (name === 'settings') loadSettings();
-  if (name === 'register') initRegisterForm();
+function showPage(name,el){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
+  if(el) el.classList.add('active');
+  if(name==='list') renderList();
+  if(name==='logs') loadLogs();
+  if(name==='buyers') renderBuyers();
+  if(name==='settings') loadSettings();
+  if(name==='register') initRegisterForm();
+}
+
+// ── GAS通信 ──
+async function gasGet(params){
+  const url=gasUrl(); if(!url){toast('GAS URLを設定してください');throw new Error('no gas url');}
+  const q=new URLSearchParams(params).toString();
+  const r=await fetch(`${url}?${q}`);
+  return r.json();
+}
+async function gasPost(body){
+  const url=gasUrl(); if(!url){toast('GAS URLを設定してください');throw new Error('no gas url');}
+  await fetch(url,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(body)});
 }
 
 // ── 物件一覧 ──
-function renderList() {
-  const props = getData('re_properties', []);
-  const logs = getData('re_logs', []);
-  const area = document.getElementById('prop-list-area');
-
-  if (props.length === 0) {
-    area.innerHTML = `<div class="empty-state">
-      <div style="font-size:32px">🏗</div>
-      <p>物件が登録されていません。<br>「物件を登録」から追加してください。</p>
-      <button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="startRegister()">＋ 物件を登録</button>
-    </div>`;
+async function renderList(){
+  const area=document.getElementById('prop-list-area');
+  area.innerHTML='<div class="empty-state"><span class="spinner"></span>読み込み中…</div>';
+  try{
+    propsCache=await gasGet({action:'getAllProps'});
+    if(!Array.isArray(propsCache)) propsCache=[];
+  }catch(e){
+    area.innerHTML='<div class="empty-state">⚠️ データ読み込み失敗。GAS URLを確認してください。</div>';
     return;
   }
-
-  area.innerHTML = `<div class="prop-cards">${props.map(p => {
-    const propLogs = logs.filter(l => l.propId === p.id);
-    const openers = [...new Set(propLogs.filter(l => l.action === 'page_open').map(l => l.buyer))];
-    const lastLog = propLogs.sort((a,b) => b.timestamp > a.timestamp ? 1 : -1)[0];
-    const starsHtml = '★'.repeat(p.stars||0) + '☆'.repeat(5-(p.stars||0));
-
-    return `<div class="prop-card">
+  if(propsCache.length===0){
+    area.innerHTML=`<div class="empty-state"><div style="font-size:32px">🏗</div><p>物件が登録されていません。</p><button class="btn btn-primary btn-sm" style="margin-top:14px" onclick="startRegister()">＋ 物件を登録</button></div>`;
+    return;
+  }
+  area.innerHTML=`<div class="prop-cards">${propsCache.map(p=>`
+    <div class="prop-card">
       <div>
-        <div class="prop-card-name">${escHtml(p.name)}</div>
-        <div class="prop-card-meta">
-          ID: ${escHtml(p.id)} &nbsp;｜&nbsp;
-          <span class="prop-card-stars">${starsHtml}</span>
-          &nbsp;｜&nbsp; 資料: ${(p.pdfs||[]).filter(f=>f.url).length}件
-        </div>
-        <div style="margin-top:6px; font-size:12px; color:var(--ink-light)">
-          ${openers.length > 0
-            ? `<span class="dot dot-g"></span>閲覧済み: ${openers.join('・')}`
-            : `<span class="dot dot-gray"></span>未閲覧`}
-          ${lastLog ? `　最終: ${fmtDate(lastLog.timestamp)}` : ''}
-        </div>
+        <div class="prop-card-name">${esc(p.name)}</div>
+        <div class="prop-card-meta">ID: ${esc(p.id)} &nbsp;｜&nbsp; <span class="prop-card-stars">${'★'.repeat(p.stars||0)}${'☆'.repeat(5-(p.stars||0))}</span></div>
       </div>
       <div class="prop-card-actions">
         <button class="btn btn-sm btn-secondary" onclick="editProperty('${p.id}')">編集</button>
         <button class="btn btn-sm btn-primary" onclick="openUrlModal('${p.id}')">URL発行</button>
       </div>
-    </div>`;
-  }).join('')}</div>
-  <div style="margin-top:16px">
-    <button class="btn btn-primary btn-sm" onclick="startRegister()">＋ 新しい物件を登録</button>
-  </div>`;
+    </div>`).join('')}
+  </div>
+  <div style="margin-top:16px"><button class="btn btn-primary btn-sm" onclick="startRegister()">＋ 新しい物件を登録</button></div>`;
 }
 
 // ── 物件登録フォーム ──
-function initRegisterForm(prop) {
-  editingId = prop ? prop.id : null;
-  currentStars = prop ? (prop.stars || 0) : 0;
-  document.getElementById('register-title').textContent = prop ? '物件を編集' : '物件を登録';
-  document.getElementById('f-name').value = prop ? prop.name : '';
-  document.getElementById('f-comment').value = prop ? (prop.comment || '') : '';
-  document.getElementById('delete-btn').style.display = prop ? 'block' : 'none';
+function initRegisterForm(prop){
+  editingId=prop?prop.id:null;
+  currentStars=prop?(prop.stars||0):0;
+  document.getElementById('register-title').textContent=prop?'物件を編集':'物件を登録';
+  document.getElementById('f-name').value=prop?prop.name:'';
+  document.getElementById('f-comment').value=prop?(prop.comment||''):'';
+  document.getElementById('f-folder-url').value=prop?(prop.folderUrl||''):'';
+  document.getElementById('delete-btn').style.display=prop?'block':'none';
   updateStars();
-
-  // フィールド
-  document.getElementById('fields-container').innerHTML = '';
-  const fields = prop ? (prop.fields || []) : [
-    {label:'価格', value:''}, {label:'商流', value:''}, {label:'他社状況', value:''}, {label:'返答期限目安', value:''}
+  document.getElementById('fields-container').innerHTML='';
+  const fields=prop?(prop.fields||[]):[
+    {label:'価格',value:''},{label:'商流',value:''},{label:'他社状況',value:''},{label:'返答期限目安',value:''}
   ];
-  fields.forEach(f => addField(f.label, f.value));
-
-  // フォルダURL
-  document.getElementById('f-folder-url').value = prop ? (prop.folderUrl || '') : '';
+  fields.forEach(f=>addField(f.label,f.value));
 }
-
-function startRegister() {
-  showPageDirect('register');
-  initRegisterForm();
-}
-function editProperty(id) {
-  const prop = getData('re_properties',[]).find(p => p.id === id);
-  if (!prop) return;
+function startRegister(){ showPageDirect('register'); initRegisterForm(); }
+function editProperty(id){
+  const prop=propsCache.find(p=>p.id===id);
+  if(!prop){toast('物件データを読み込めませんでした');return;}
   showPageDirect('register');
   initRegisterForm(prop);
 }
-function showPageDirect(name) {
-  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
-  document.getElementById('page-' + name).classList.add('active');
-  document.querySelectorAll('.nav-item').forEach(n => {
-    if (n.getAttribute('onclick') && n.getAttribute('onclick').includes(name)) n.classList.add('active');
-  });
+function showPageDirect(name){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  document.getElementById('page-'+name).classList.add('active');
 }
-
-function addField(label='', value='') {
-  const container = document.getElementById('fields-container');
-  const row = document.createElement('div');
-  row.className = 'field-row';
-  row.innerHTML = `
-    <input type="text" class="field-label" placeholder="項目名（例：所在地）" value="${escAttr(label)}">
-    <input type="text" class="field-value" placeholder="値（例：大阪市北区◯◯町）" value="${escAttr(value)}">
-    <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
-  `;
-  container.appendChild(row);
+function addField(label='',value=''){
+  const c=document.getElementById('fields-container');
+  const row=document.createElement('div'); row.className='field-row';
+  row.innerHTML=`<input type="text" class="field-label" placeholder="項目名（例：価格）" value="${escAttr(label)}"><input type="text" class="field-value" placeholder="値" value="${escAttr(value)}"><button class="btn-remove" onclick="this.parentElement.remove()">×</button>`;
+  c.appendChild(row);
 }
+function setStar(n){currentStars=n;updateStars();}
+function updateStars(){document.querySelectorAll('#star-picker span').forEach((s,i)=>s.classList.toggle('on',i<currentStars));}
 
-function addPdf(name='', url='') {
-  const container = document.getElementById('pdfs-container');
-  const row = document.createElement('div');
-  row.className = 'pdf-row';
-  row.innerHTML = `
-    <input type="text" class="pdf-name-input" placeholder="資料名（例：物件概要書）" value="${escAttr(name)}">
-    <input type="text" class="pdf-url-input" placeholder="https://drive.google.com/…" value="${escAttr(url)}">
-    <button class="btn-remove" onclick="this.parentElement.remove()">×</button>
-  `;
-  container.appendChild(row);
-}
-
-function setStar(n) { currentStars = n; updateStars(); }
-function updateStars() {
-  document.querySelectorAll('#star-picker span').forEach((s, i) => {
-    s.classList.toggle('on', i < currentStars);
-  });
-}
-
-function saveProperty() {
-  const name = document.getElementById('f-name').value.trim();
-  if (!name) { toast('物件名を入力してください'); return; }
-
-  const fields = [...document.querySelectorAll('#fields-container .field-row')].map(r => ({
-    label: r.querySelector('.field-label').value.trim(),
-    value: r.querySelector('.field-value').value.trim()
-  })).filter(f => f.label);
-
-  const folderUrl = document.getElementById('f-folder-url').value.trim();
-  const comment = document.getElementById('f-comment').value.trim();
-
-  const props = getData('re_properties', []);
-  if (editingId) {
-    const idx = props.findIndex(p => p.id === editingId);
-    if (idx >= 0) {
-      props[idx] = { ...props[idx], name, stars: currentStars, fields, folderUrl, comment };
-    }
-    toast('保存しました');
-  } else {
-    const id = 'prop_' + Date.now();
-    props.push({ id, name, stars: currentStars, fields, folderUrl, comment, createdAt: new Date().toISOString() });
-    toast('物件を登録しました');
+async function saveProperty(){
+  const name=document.getElementById('f-name').value.trim();
+  if(!name){toast('物件名を入力してください');return;}
+  const fields=[...document.querySelectorAll('#fields-container .field-row')].map(r=>({label:r.querySelector('.field-label').value.trim(),value:r.querySelector('.field-value').value.trim()})).filter(f=>f.label);
+  const prop={
+    id: editingId||('prop_'+Date.now()),
+    name, stars:currentStars, fields,
+    folderUrl:document.getElementById('f-folder-url').value.trim(),
+    comment:document.getElementById('f-comment').value.trim(),
+    createdAt: editingId?(propsCache.find(p=>p.id===editingId)||{}).createdAt||new Date().toISOString():new Date().toISOString()
+  };
+  const btn=document.getElementById('save-btn');
+  btn.textContent='保存中…'; btn.disabled=true;
+  try{
+    await gasPost({action:'saveProp',prop});
+    toast(editingId?'保存しました':'物件を登録しました');
+    showPageDirect('list');
+    await renderList();
+  }catch(e){
+    toast('保存に失敗しました。GAS URLを確認してください。');
+  }finally{
+    btn.textContent='💾 保存する'; btn.disabled=false;
   }
-  setData('re_properties', props);
-  showPageDirect('list');
-  renderList();
 }
-
-function cancelEdit() { showPageDirect('list'); renderList(); }
-
-function deleteProperty() {
-  if (!editingId) return;
-  if (!confirm('この物件を削除しますか？')) return;
-  const props = getData('re_properties', []).filter(p => p.id !== editingId);
-  setData('re_properties', props);
-  toast('削除しました');
-  showPageDirect('list');
-  renderList();
+function cancelEdit(){showPageDirect('list');renderList();}
+async function deleteProperty(){
+  if(!editingId||!confirm('この物件を削除しますか？'))return;
+  try{
+    await gasPost({action:'deleteProp',propId:editingId});
+    toast('削除しました');
+    showPageDirect('list');
+    await renderList();
+  }catch(e){toast('削除に失敗しました');}
 }
 
 // ── URL発行モーダル ──
-function openUrlModal(propId) {
-  modalPropId = propId;
-  selectedBuyer = null;
-  const prop = getData('re_properties',[]).find(p => p.id === propId);
-  const buyers = getData('re_buyers', []);
-  document.getElementById('modal-prop-name').textContent = prop ? prop.name : '';
-
-  const chips = document.getElementById('modal-buyer-chips');
-  if (buyers.length === 0) {
-    chips.innerHTML = '<div style="font-size:12px;color:var(--ink-light)">業者が登録されていません。先に「業者管理」で登録してください。</div>';
-  } else {
-    chips.innerHTML = buyers.map(b =>
-      `<div class="buyer-chip" onclick="selectBuyer('${escAttr(b)}')">${escHtml(b)}</div>`
-    ).join('');
-  }
-  document.getElementById('modal-url-field').textContent = '← 業者を選んでください';
+function openUrlModal(propId){
+  modalPropId=propId;
+  const prop=propsCache.find(p=>p.id===propId);
+  const buyers=getBuyers();
+  document.getElementById('modal-prop-name').textContent=prop?prop.name:'';
+  const chips=document.getElementById('modal-buyer-chips');
+  chips.innerHTML=buyers.length===0
+    ?'<div style="font-size:12px;color:var(--ink-light)">業者が登録されていません。先に「業者管理」で登録してください。</div>'
+    :buyers.map(b=>`<div class="buyer-chip" onclick="selectBuyer('${escAttr(b)}')">${esc(b)}</div>`).join('');
+  document.getElementById('modal-url-field').textContent='← 業者を選んでください';
   document.getElementById('modal-copy-btn').classList.remove('copied');
-  document.getElementById('modal-copy-btn').textContent = 'コピー';
-  document.getElementById('url-modal').style.display = 'flex';
+  document.getElementById('modal-copy-btn').textContent='コピー';
+  document.getElementById('url-modal').style.display='flex';
 }
-function selectBuyer(name) {
-  selectedBuyer = name;
-  document.querySelectorAll('.buyer-chip').forEach(c => c.classList.remove('selected'));
+function selectBuyer(name){
+  document.querySelectorAll('.buyer-chip').forEach(c=>c.classList.remove('selected'));
   event.currentTarget.classList.add('selected');
-  const pageUrl = localStorage.getItem('re_page_url') || location.href.replace('admin.html','property-page.html');
-  const url = `${pageUrl}?prop=${modalPropId}&buyer=${encodeURIComponent(name)}`;
-  document.getElementById('modal-url-field').textContent = url;
+  const pUrl=pageUrl()||'https://houconsul-sketch.github.io/realestate-portal/property-page.html';
+  document.getElementById('modal-url-field').textContent=`${pUrl}?prop=${modalPropId}&buyer=${encodeURIComponent(name)}`;
   document.getElementById('modal-copy-btn').classList.remove('copied');
-  document.getElementById('modal-copy-btn').textContent = 'コピー';
+  document.getElementById('modal-copy-btn').textContent='コピー';
 }
-function copyModalUrl() {
-  const url = document.getElementById('modal-url-field').textContent;
-  if (!url || url.includes('業者を選んで')) { toast('業者を選んでください'); return; }
-  navigator.clipboard.writeText(url).then(() => {
-    document.getElementById('modal-copy-btn').textContent = '✓ コピー完了';
+function copyModalUrl(){
+  const url=document.getElementById('modal-url-field').textContent;
+  if(!url||url.includes('業者を選んで')){toast('業者を選んでください');return;}
+  navigator.clipboard.writeText(url).then(()=>{
+    document.getElementById('modal-copy-btn').textContent='✓ コピー完了';
     document.getElementById('modal-copy-btn').classList.add('copied');
     toast('URLをコピーしました');
   });
 }
-function closeModal() { document.getElementById('url-modal').style.display = 'none'; }
+function closeModal(){document.getElementById('url-modal').style.display='none';}
 
-// ── ログ ──
-function renderLogs() {
-  const logs = getData('re_logs', []).slice().reverse();
-  const props = getData('re_properties', []);
-  const propFilter = document.getElementById('log-filter-prop').value;
-  const buyerFilter = document.getElementById('log-filter-buyer').value;
-
-  // フィルタ選択肢を更新
-  const propSel = document.getElementById('log-filter-prop');
-  const buyerSel = document.getElementById('log-filter-buyer');
-  const propNames = [...new Set(logs.map(l => l.propId))];
-  const buyerNames = [...new Set(logs.map(l => l.buyer))];
-  propSel.innerHTML = '<option value="">すべての物件</option>' +
-    propNames.map(id => { const p = props.find(x=>x.id===id); return `<option value="${id}" ${propFilter===id?'selected':''}>${p?p.name:id}</option>`; }).join('');
-  buyerSel.innerHTML = '<option value="">すべての業者</option>' +
-    buyerNames.map(b => `<option value="${b}" ${buyerFilter===b?'selected':''}>${b}</option>`).join('');
-
-  const filtered = logs.filter(l =>
-    (!propFilter || l.propId === propFilter) &&
-    (!buyerFilter || l.buyer === buyerFilter)
-  );
-
-  const tbody = document.getElementById('log-tbody');
-  if (filtered.length === 0) {
-    tbody.innerHTML = '<tr><td colspan="5" style="text-align:center;padding:32px;color:var(--ink-light)">ログがありません</td></tr>';
-    return;
+// ── ログ（GASから取得） ──
+async function loadLogs(){
+  const tbody=document.getElementById('log-tbody');
+  tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--ink-light)"><span class="spinner"></span>読み込み中…</td></tr>';
+  try{
+    const logs=await gasGet({action:'getLogs'});
+    localStorage.setItem('re_logs_cache',JSON.stringify(logs));
+    renderLogs(logs);
+  }catch(e){
+    tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:24px;color:var(--ink-light)">ログの読み込みに失敗しました</td></tr>';
   }
-  tbody.innerHTML = filtered.map(l => {
-    const prop = props.find(p => p.id === l.propId);
-    return `<tr>
-      <td>${fmtDate(l.timestamp)}</td>
-      <td>${escHtml(l.buyer)}</td>
-      <td>${escHtml(prop ? prop.name : l.propId)}</td>
-      <td>${l.action === 'page_open'
-        ? '<span class="badge badge-open">ページ開封</span>'
-        : '<span class="badge badge-pdf">PDF閲覧</span>'
-      }</td>
-      <td style="color:var(--ink-light)">${escHtml(l.detail||'─')}</td>
-    </tr>`;
-  }).join('');
 }
-
-function clearLogs() {
-  if (!confirm('ログを全件削除しますか？')) return;
-  setData('re_logs', []);
-  renderLogs();
-  toast('ログを削除しました');
+function renderLogs(logs){
+  logs=logs||getLogs();
+  const buyerFilter=document.getElementById('log-filter-buyer').value;
+  const buyers=[...new Set(logs.map(l=>l.buyer))];
+  const sel=document.getElementById('log-filter-buyer');
+  sel.innerHTML='<option value="">すべての業者</option>'+buyers.map(b=>`<option value="${esc(b)}" ${buyerFilter===b?'selected':''}>${esc(b)}</option>`).join('');
+  const filtered=buyerFilter?logs.filter(l=>l.buyer===buyerFilter):logs;
+  const tbody=document.getElementById('log-tbody');
+  if(filtered.length===0){tbody.innerHTML='<tr><td colspan="4" style="text-align:center;padding:32px;color:var(--ink-light)">ログがありません</td></tr>';return;}
+  tbody.innerHTML=[...filtered].reverse().map(l=>`<tr>
+    <td>${esc(l.timestamp||'')}</td>
+    <td>${esc(l.buyer||'')}</td>
+    <td>${esc(l.propName||l.propId||'')}</td>
+    <td>${l.action==='ページ開封'?'<span class="badge badge-open">ページ開封</span>':'<span class="badge badge-pdf">フォルダ閲覧</span>'}</td>
+  </tr>`).join('');
 }
 
 // ── 業者管理 ──
-function addBuyer() {
-  const input = document.getElementById('buyer-input');
-  const name = input.value.trim();
-  if (!name) return;
-  const buyers = getData('re_buyers', []);
-  if (buyers.includes(name)) { toast('すでに登録されています'); return; }
+function addBuyer(){
+  const input=document.getElementById('buyer-input');
+  const name=input.value.trim(); if(!name)return;
+  const buyers=getBuyers();
+  if(buyers.includes(name)){toast('すでに登録されています');return;}
   buyers.push(name);
-  setData('re_buyers', buyers);
-  input.value = '';
-  renderBuyers();
-  toast(`「${name}」を追加しました`);
+  localStorage.setItem('re_buyers',JSON.stringify(buyers));
+  input.value=''; renderBuyers(); toast(`「${name}」を追加しました`);
 }
-function removeBuyer(name) {
-  const buyers = getData('re_buyers', []).filter(b => b !== name);
-  setData('re_buyers', buyers);
+function removeBuyer(name){
+  const buyers=getBuyers().filter(b=>b!==name);
+  localStorage.setItem('re_buyers',JSON.stringify(buyers));
   renderBuyers();
 }
-function renderBuyers() {
-  const buyers = getData('re_buyers', []);
-  const area = document.getElementById('buyer-list');
-  if (buyers.length === 0) {
-    area.innerHTML = '<div style="color:var(--ink-light);font-size:13px">登録された業者はいません</div>';
-    return;
-  }
-  area.innerHTML = buyers.map(b => `
-    <div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)">
-      <span style="font-size:14px">${escHtml(b)}</span>
-      <button class="btn btn-sm btn-secondary" style="color:var(--danger)" onclick="removeBuyer('${escAttr(b)}')">削除</button>
-    </div>
-  `).join('');
+function renderBuyers(){
+  const buyers=getBuyers();
+  const area=document.getElementById('buyer-list');
+  if(buyers.length===0){area.innerHTML='<div style="color:var(--ink-light);font-size:13px">登録された業者はいません</div>';return;}
+  area.innerHTML=buyers.map(b=>`<div style="display:flex;align-items:center;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--border)"><span>${esc(b)}</span><button class="btn btn-sm btn-secondary" style="color:var(--danger)" onclick="removeBuyer('${escAttr(b)}')">削除</button></div>`).join('');
 }
 
 // ── 設定 ──
-function loadSettings() {
-  document.getElementById('s-gas-url').value = localStorage.getItem('re_gas_url') || '';
-  document.getElementById('s-page-url').value = localStorage.getItem('re_page_url') || '';
+function loadSettings(){
+  document.getElementById('s-gas-url').value=localStorage.getItem('re_gas_url')||'';
+  document.getElementById('s-page-url').value=localStorage.getItem('re_page_url')||'';
 }
-function saveSettings() {
-  localStorage.setItem('re_gas_url', document.getElementById('s-gas-url').value.trim());
-  localStorage.setItem('re_page_url', document.getElementById('s-page-url').value.trim());
+function saveSettings(){
+  localStorage.setItem('re_gas_url',document.getElementById('s-gas-url').value.trim());
+  localStorage.setItem('re_page_url',document.getElementById('s-page-url').value.trim());
   toast('設定を保存しました');
 }
 
-// ── データ export/import ──
-function exportData() {
-  const data = {
-    properties: getData('re_properties', []),
-    buyers: getData('re_buyers', []),
-    logs: getData('re_logs', [])
-  };
-  const blob = new Blob([JSON.stringify(data, null, 2)], {type:'application/json'});
-  const a = document.createElement('a');
-  a.href = URL.createObjectURL(blob);
-  a.download = `realestate_backup_${new Date().toISOString().slice(0,10)}.json`;
-  a.click();
-}
-function importData(input) {
-  const file = input.files[0]; if (!file) return;
-  const reader = new FileReader();
-  reader.onload = e => {
-    try {
-      const data = JSON.parse(e.target.result);
-      if (data.properties) setData('re_properties', data.properties);
-      if (data.buyers) setData('re_buyers', data.buyers);
-      if (data.logs) setData('re_logs', data.logs);
-      toast('インポートしました');
-      renderList();
-    } catch { toast('ファイルの読み込みに失敗しました'); }
-  };
-  reader.readAsText(file);
-}
-
 // ── ユーティリティ ──
-function fmtDate(iso) {
-  if (!iso) return '─';
-  const d = new Date(iso);
-  return `${d.getFullYear()}/${String(d.getMonth()+1).padStart(2,'0')}/${String(d.getDate()).padStart(2,'0')} ${String(d.getHours()).padStart(2,'0')}:${String(d.getMinutes()).padStart(2,'0')}`;
-}
-function escHtml(s) {
-  return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
-function escAttr(s) { return String(s||'').replace(/'/g,"\\'"); }
-function toast(msg) {
-  const t = document.getElementById('toast');
-  t.textContent = msg; t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 2200);
-}
-
-// ── 初期化 ──
-renderList();
+function esc(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escAttr(s){return String(s||'').replace(/'/g,"\\'");}
+function toast(msg){const t=document.getElementById('toast');t.textContent=msg;t.classList.add('show');setTimeout(()=>t.classList.remove('show'),2200);}
 
 // モーダル外クリックで閉じる
-document.getElementById('url-modal').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
+document.getElementById('url-modal').addEventListener('click',function(e){if(e.target===this)closeModal();});
 
-// ── GASからのログ受信（property-page.htmlが送ったログをLocalStorageに記録） ──
-// property-page.htmlが同じドメインで動いている場合、BroadcastChannelで受け取る
-try {
-  const bc = new BroadcastChannel('re_log_channel');
-  bc.onmessage = e => {
-    const logs = getData('re_logs', []);
-    logs.push(e.data);
-    setData('re_logs', logs);
-  };
-} catch(e) {}
+// 初期化
+renderList();
 </script>
 </body>
 </html>
