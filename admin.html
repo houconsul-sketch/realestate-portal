@@ -354,17 +354,18 @@
       </div>
 
       <div class="card">
-        <div class="section-title">添付資料（Google Drive リンク）</div>
-        <div style="font-size:11px; color:var(--ink-light); margin-bottom:12px">
-          Google DriveのリンクをコピーしてURLに貼ってください。
+        <div class="section-title">添付資料（Google Drive フォルダ）</div>
+        <div style="font-size:11px; color:var(--ink-light); margin-bottom:12px; line-height:1.7">
+          物件資料をまとめたGoogle DriveフォルダのURLを1つ貼るだけでOKです。<br>
+          業者さんはフォルダを開いて個別閲覧・一括ダウンロードができます。
         </div>
-        <div style="display:grid; grid-template-columns:1fr 2fr 36px; gap:8px; margin-bottom:6px;">
-          <div style="font-size:11px; font-weight:600; color:var(--ink-light); padding:0 2px;">資料名</div>
-          <div style="font-size:11px; font-weight:600; color:var(--ink-light); padding:0 2px;">Google Drive URL</div>
-          <div></div>
+        <div class="form-row" style="margin:0">
+          <label>Google Drive フォルダURL</label>
+          <input type="text" id="f-folder-url" placeholder="https://drive.google.com/drive/folders/…">
         </div>
-        <div id="pdfs-container"></div>
-        <button class="btn-add" onclick="addPdf()">＋ 資料を追加</button>
+        <div style="margin-top:8px; font-size:11px; color:var(--ink-light); line-height:1.7">
+          📌 取得方法：Driveでフォルダを右クリック →「リンクをコピー」→「リンクを知っている全員」に共有設定
+        </div>
       </div>
 
       <div class="card">
@@ -567,16 +568,12 @@ function initRegisterForm(prop) {
   // フィールド
   document.getElementById('fields-container').innerHTML = '';
   const fields = prop ? (prop.fields || []) : [
-    {label:'所在地', value:''}, {label:'価格', value:''}, {label:'利回り', value:''},
-    {label:'面積', value:''}, {label:'築年数', value:''}, {label:'構造', value:''}
+    {label:'価格', value:''}, {label:'商流', value:''}, {label:'他社状況', value:''}, {label:'返答期限目安', value:''}
   ];
   fields.forEach(f => addField(f.label, f.value));
 
-  // PDF
-  document.getElementById('pdfs-container').innerHTML = '';
-  const pdfs = prop ? (prop.pdfs || []) : [];
-  if (pdfs.length > 0) pdfs.forEach(f => addPdf(f.name, f.url));
-  else addPdf();
+  // フォルダURL
+  document.getElementById('f-folder-url').value = prop ? (prop.folderUrl || '') : '';
 }
 
 function startRegister() {
@@ -638,21 +635,19 @@ function saveProperty() {
     value: r.querySelector('.field-value').value.trim()
   })).filter(f => f.label);
 
-  const pdfs = [...document.querySelectorAll('#pdfs-container .pdf-row')].map(r => ({
-    name: r.querySelector('.pdf-name-input').value.trim(),
-    url: r.querySelector('.pdf-url-input').value.trim()
-  })).filter(f => f.name && f.url);
+  const folderUrl = document.getElementById('f-folder-url').value.trim();
+  const comment = document.getElementById('f-comment').value.trim();
 
   const props = getData('re_properties', []);
   if (editingId) {
     const idx = props.findIndex(p => p.id === editingId);
     if (idx >= 0) {
-      props[idx] = { ...props[idx], name, stars: currentStars, fields, pdfs, comment: document.getElementById('f-comment').value.trim() };
+      props[idx] = { ...props[idx], name, stars: currentStars, fields, folderUrl, comment };
     }
     toast('保存しました');
   } else {
     const id = 'prop_' + Date.now();
-    props.push({ id, name, stars: currentStars, fields, pdfs, comment: document.getElementById('f-comment').value.trim(), createdAt: new Date().toISOString() });
+    props.push({ id, name, stars: currentStars, fields, folderUrl, comment, createdAt: new Date().toISOString() });
     toast('物件を登録しました');
   }
   setData('re_properties', props);
